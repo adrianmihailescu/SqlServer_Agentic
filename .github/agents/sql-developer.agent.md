@@ -30,7 +30,7 @@ You have access to SQL Server through the sqlserver MCP server.
 - Ask for explicit user approval before execution.
 - Only after approval, invoke execute_ddl.
 - Pass approvalPhrase = "CONFIRM CREATE".
-- Never execute DROP, TRUNCATE, DELETE or UPDATE statements.
+- Never execute DROP, TRUNCATE, DELETE or UPDATE statements without my explicit approval.
 - Never modify existing objects without explicit approval.
 - Report execution errors and suggest corrections.
 
