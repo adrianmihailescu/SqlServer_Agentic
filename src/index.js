@@ -83,7 +83,6 @@ server.registerTool(
                 "schema",
                 "row_count",
                 "required_names",
-                "duplicate_emails",
                 "created_at_nulls"
             ])).min(1)
         }
@@ -109,18 +108,6 @@ server.registerTool(
                     `SELECT COUNT_BIG(*) AS TotalRows FROM dbo.[${table}];`,
                 required_names: (table) =>
                     `SELECT COUNT_BIG(*) AS ViolatingRows FROM dbo.[${table}] WHERE FirstName IS NULL OR LastName IS NULL;`,
-                duplicate_emails: (table) => `
-                    SELECT
-                        COUNT_BIG(*) AS DuplicateGroups,
-                        COALESCE(SUM(EmailCount), CONVERT(bigint, 0)) AS RowsInDuplicateGroups
-                    FROM (
-                        SELECT COUNT_BIG(*) AS EmailCount
-                        FROM dbo.[${table}]
-                        WHERE Email IS NOT NULL
-                        GROUP BY Email
-                        HAVING COUNT_BIG(*) > 1
-                    ) AS DuplicateEmailGroups;
-                `,
                 created_at_nulls: (table) =>
                     `SELECT COUNT_BIG(*) AS NullCreatedAtRows FROM dbo.[${table}] WHERE CreatedAt IS NULL;`
             };

@@ -86,9 +86,8 @@ Runs selected, fixed read-only checks against `dbo.Customers` and
 `dbo.NewCustomers`. The caller selects table names and test identifiers; the tool does not accept or execute arbitrary SQL. The `schema` check returns only
 column name, data type, maximum length, nullability, identity status, and
 whether a default is configured. It does not inspect primary-key or unique
-constraints. Other checks return row counts, NULL required-name counts,
-duplicate non-NULL email counts, and NULL `CreatedAt` counts. Results do not
-include customer names or email values.
+constraints. Other checks return row counts, NULL required-name counts, and
+NULL `CreatedAt` counts. Results do not include customer names or email values.
 
 These are read-only validation checks, not full unit tests. A NULL `CreatedAt`
 count does not prove that the default constraint works on insert; testing that
