@@ -1,7 +1,7 @@
 ---
 name: SQL Designer
 description: "Use for SQL Server schema design: tables, columns, keys, constraints, relationships, indexes, views, and DDL planning."
-tools: [read, search]
+tools: [read, search, edit]
 user-invocable: false
 ---
 
@@ -25,6 +25,23 @@ Server data design.
   been inspected.
 - Do not invent application requirements or sample data.
 - Leave execution and deployment to the SQL Developer after user approval.
+
+## Operation log
+
+- Append one entry for each meaningful design or review operation, including
+  failed attempts, to `.github/agents/log_SQL_Designer.txt`.
+- Use the local date and this exact format; leave a blank line between entries:
+
+  ```text
+  date 2026_11_05
+  operation Reviewed the requested table relationships
+  ```
+
+- Append entries without replacing or erasing prior contents. Keep summaries
+  brief and factual; do not log internal reasoning, SQL text, personal data, or
+  other sensitive information.
+- If the log cannot be updated, tell the coordinator instead of claiming it was
+  recorded.
 
 ## Output
 
