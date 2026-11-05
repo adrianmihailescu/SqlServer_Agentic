@@ -136,13 +136,11 @@ server.registerTool(
                     const request = pool.request();
                     let result;
 
-                    if (test === "schema") {
-                        result = await request
+                    result = test === "schema"
+                        ? await request
                             .input("objectId", sql.Int, objectId)
-                            .query(testQueries.schema);
-                    } else {
-                        result = await request.query(testQueries[test](table));
-                    }
+                            .query(testQueries.schema)
+                        : await request.query(testQueries[test](table));
 
                     tableResults.push({
                         test,

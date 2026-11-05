@@ -1,0 +1,14 @@
+date 2026_11_05
+operation Reviewed available SQL validation tools; table-level tests were not run because query execution is unavailable.
+
+date 2026_11_05
+operation Reviewed proposed dbo.Customers and dbo.NewCustomers SELECT tests; approved read-only checks, but could not execute them without a query tool.
+
+date 2026_11_05
+operation Reviewed the fixed customer validation tool and approved its schema check after corrections; database execution awaits MCP restart.
+
+date 2026_11_05
+operation Approved schema, row-count, required-name, duplicate-email, and CreatedAt-null checks for both customer tables; noted limits of NULL and uniqueness checks.
+
+date 2026_11_05
+operation Approved test set could not complete because row-count SQL used a reserved alias; coordinator corrected it, tests await MCP restart.

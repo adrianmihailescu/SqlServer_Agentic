@@ -1,0 +1,32 @@
+date 2026_11_05
+operation Delegated dbo.Customers validation to SQL Tester and reviewed tool limitations.
+
+date 2026_11_05
+operation Delegated read-only customer-table test query review; execution was blocked because no SQL query tool is available.
+
+date 2026_11_05
+operation Added a fixed read-only customer validation tool and delegated static review to SQL Tester; awaiting MCP restart before any database tests.
+
+date 2026_11_05
+operation Delegated the selected read-only checks for Customers and NewCustomers; SQL Tester approved all five checks before execution.
+
+date 2026_11_05
+operation Ran the approved customer validation tool; it failed on the reserved RowCount alias, which was corrected and requires MCP restart before retry.
+
+date 2026_11_05
+operation Simplified the customer schema metadata query without changing the validation checks or returned fields.
+
+date 2026_11_05
+operation Refactored the schema test query to use grouped index metadata while preserving its result fields and checks.
+
+date 2026_11_05
+operation Removed numeric precision and scale fields from customer schema results as unnecessary for the requested checks.
+
+date 2026_11_05
+operation Simplified the schema test to column metadata only after the user chose to remove primary-key and unique-index checks.
+
+date 2026_11_05
+operation Updated README to document the reduced schema test fields and omitted constraint checks.
+
+date 2026_11_05
+operation Removed the duplicate-email test from the validation tool and updated the README.
