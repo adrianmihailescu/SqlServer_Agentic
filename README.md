@@ -115,7 +115,7 @@ do not bypass those tool limitations. The SQL Reporter documents supplied or
 workspace evidence; it does not query live database contents.
 
 Each agent appends meaningful operations to its own
-`.github/agents/log_<Agent_Name>.txt` file, using underscores for spaces in the
+`.github/agents/logs/log_<Agent_Name>.txt` file, using underscores for spaces in the
 agent name. Each entry contains a `date yyyy_mm_dd` line followed by an
 `operation` summary. These generated logs are excluded from Git.
 
