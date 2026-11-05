@@ -31,7 +31,7 @@ workspace files and evidence supplied by the coordinator or other specialists.
 - Use the local date and this exact format; leave a blank line between entries:
 
   ```text
-  date 2026_11_05
+  date 2026_11_05 14:24:23
   operation Summarized the supplied validation results
   ```
 

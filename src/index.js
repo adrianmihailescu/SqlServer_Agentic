@@ -71,7 +71,124 @@ server.registerTool(
     }
 );
 
-// Tool 2: Create a database object
+// Tool 2: Run fixed, read-only checks for the customer tables
+server.registerTool(
+    "run_customer_table_tests",
+    {
+        description:
+            "Run allowlisted, read-only metadata and aggregate checks against dbo.Customers and dbo.NewCustomers. Does not accept SQL or return customer names or email values. A CreatedAt NULL count does not prove that the default works.",
+        inputSchema: {
+            tables: z.array(z.enum(["Customers", "NewCustomers"])).min(1),
+            tests: z.array(z.enum([
+                "schema",
+                "row_count",
+                "required_names",
+                "duplicate_emails",
+                "created_at_nulls"
+            ])).min(1)
+        }
+    },
+    async ({ tables, tests }) => {
+        try {
+            pool ??= await sql.connect(dbConfig);
+
+            const testQueries = {
+                schema: `
+                    SELECT
+                        c.name AS ColumnName,
+                        TYPE_NAME(c.user_type_id) AS DataType,
+                        c.max_length AS MaxLengthBytes,
+                        c.is_nullable AS IsNullable,
+                        c.is_identity AS IsIdentity,
+                        CONVERT(bit, CASE WHEN c.default_object_id <> 0 THEN 1 ELSE 0 END) AS HasDefault
+                    FROM sys.columns AS c
+                    WHERE c.object_id = @objectId
+                    ORDER BY c.column_id;
+                `,
+                row_count: (table) =>
+                    `SELECT COUNT_BIG(*) AS TotalRows FROM dbo.[${table}];`,
+                required_names: (table) =>
+                    `SELECT COUNT_BIG(*) AS ViolatingRows FROM dbo.[${table}] WHERE FirstName IS NULL OR LastName IS NULL;`,
+                duplicate_emails: (table) => `
+                    SELECT
+                        COUNT_BIG(*) AS DuplicateGroups,
+                        COALESCE(SUM(EmailCount), CONVERT(bigint, 0)) AS RowsInDuplicateGroups
+                    FROM (
+                        SELECT COUNT_BIG(*) AS EmailCount
+                        FROM dbo.[${table}]
+                        WHERE Email IS NOT NULL
+                        GROUP BY Email
+                        HAVING COUNT_BIG(*) > 1
+                    ) AS DuplicateEmailGroups;
+                `,
+                created_at_nulls: (table) =>
+                    `SELECT COUNT_BIG(*) AS NullCreatedAtRows FROM dbo.[${table}] WHERE CreatedAt IS NULL;`
+            };
+
+            const results = [];
+
+            for (const table of [...new Set(tables)]) {
+                const qualifiedName = `dbo.${table}`;
+                const objectResult = await pool.request()
+                    .input("qualifiedName", sql.NVarChar(257), qualifiedName)
+                    .query("SELECT OBJECT_ID(@qualifiedName, N'U') AS ObjectId;");
+                const objectId = objectResult.recordset[0].ObjectId;
+
+                if (objectId === null) {
+                    results.push({
+                        table: qualifiedName,
+                        exists: false,
+                        tests: []
+                    });
+                    continue;
+                }
+
+                const tableResults = [];
+
+                for (const test of [...new Set(tests)]) {
+                    const request = pool.request();
+                    let result;
+
+                    if (test === "schema") {
+                        result = await request
+                            .input("objectId", sql.Int, objectId)
+                            .query(testQueries.schema);
+                    } else {
+                        result = await request.query(testQueries[test](table));
+                    }
+
+                    tableResults.push({
+                        test,
+                        rows: result.recordset
+                    });
+                }
+
+                results.push({
+                    table: qualifiedName,
+                    exists: true,
+                    tests: tableResults
+                });
+            }
+
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify(results, null, 2)
+                }]
+            };
+        } catch (error) {
+            return {
+                isError: true,
+                content: [{
+                    type: "text",
+                    text: `Customer table validation failed: ${error.message}`
+                }]
+            };
+        }
+    }
+);
+
+// Tool 3: Create a database object
 server.registerTool(
     "execute_ddl",
     {

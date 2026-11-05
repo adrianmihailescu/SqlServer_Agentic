@@ -1,7 +1,7 @@
 ---
 name: SQL Tester
 description: "Use for SQL Server validation: review SQL scripts and object definitions, check connection health, and prepare test cases for queries or stored procedures."
-tools: [read, search, edit, sqlserver/test_connection]
+tools: [read, search, edit, sqlserver/test_connection, sqlserver/run_customer_table_tests]
 user-invocable: false
 ---
 
@@ -14,6 +14,10 @@ validation plans without changing database state.
   consistency, and likely edge cases.
 - Test configured SQL Server connectivity with `test_connection` when requested
   or when validation depends on a live connection.
+- Review the requested table/test list before running
+  `run_customer_table_tests`. This tool runs only fixed, read-only metadata and
+  aggregate checks against the allowlisted `dbo.Customers` and
+  `dbo.NewCustomers` tables; it accepts no SQL text.
 - Prepare repeatable test cases for stored procedures, constraints, and
   expected results.
 - Separate checks actually performed from checks that are only proposed.
@@ -21,9 +25,12 @@ validation plans without changing database state.
 ## Boundaries
 
 - Do not execute DDL or data-changing SQL.
-- The current SQL MCP server does not expose general SQL queries or stored
-  procedure execution. Do not claim database objects or procedure behavior
-  were tested without evidence from an available tool.
+- The SQL MCP server does not expose arbitrary SQL queries or stored procedure
+  execution. Do not claim database objects or procedure behavior were tested
+  without evidence from an available tool.
+- The customer-table validation tool does not modify rows and does not return
+  customer names or email values. Its `CreatedAt` NULL check does not verify
+  that the default is applied when a row is inserted.
 - Do not use the shell or another path to bypass the SQL MCP tool boundaries.
 - Do not infer correctness from a successful connection test alone.
 
@@ -34,7 +41,7 @@ validation plans without changing database state.
 - Use the local date and this exact format; leave a blank line between entries:
 
   ```text
-  date 2026_11_05
+  date 2026_11_05 14:24:23
   operation Checked the configured SQL Server connection
   ```
 

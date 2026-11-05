@@ -13,7 +13,7 @@ flowchart TB
     V["SQL Developer<br/>Generates SQL and executes supported CREATE scripts after approval"]
     T["SQL Tester<br/>Reviews scripts, checks connectivity, and prepares test plans"]
     R["SQL Reporter<br/>Documents designs, scripts, results, and known limitations"]
-    M["SQL Server MCP Server<br/>Connection check and approved CREATE DDL"]
+    M["SQL Server MCP Server<br/>Connection check, fixed read-only customer tests, approved CREATE DDL"]
     DB[("SQL Server<br/>Configured database and existing objects")]
 
     C --> D
@@ -27,9 +27,9 @@ flowchart TB
 ```
 
 The coordinator routes work to specialist agents and consolidates their
-evidence-based results. Database access goes through the MCP server; only its
-connection check and explicitly approved `CREATE` statements are currently
-available.
+evidence-based results. Database access goes through the MCP server. Its
+customer validation tool only runs fixed read-only metadata and aggregate
+checks; `CREATE` statements still require explicit approval.
 
 ## Requirements
 
@@ -64,7 +64,8 @@ Configure the firewall to allow the SQL Server listener and, when needed, SQL Se
 
 4. Open the repository as a workspace in Visual Studio Code. The
    `.vscode/mcp.json` configuration starts `src/index.js` as the `sqlserver`
-   MCP server and loads settings from `.env`. Start or restart the MCP servervafter changing its configuration.
+   MCP server and loads settings from `.env`. Start or restart the MCP server
+   after changing its configuration or tools.
 
 ## Available MCP tools
 
@@ -79,8 +80,20 @@ Executes a `CREATE` statement for a supported SQL Server object: table, view, pr
 The tool checks that the statement starts with a supported `CREATE` keyword.
 This check is a convenience guard, not a replacement for appropriate SQL Server permissions. Use a database account with only the permissions the application needs.
 
-The current MCP server does not expose general query execution, data
-modification, or stored-procedure execution. The SQL Tester can review scripts and prepare test plans, but cannot run those tests against the database.
+### `run_customer_table_tests`
+
+Runs selected, fixed read-only checks against `dbo.Customers` and
+`dbo.NewCustomers`. The caller selects table names and test identifiers; the
+tool does not accept or execute arbitrary SQL. Available checks report schema
+metadata, row counts, NULL required-name counts, duplicate non-NULL email
+counts, and NULL `CreatedAt` counts. Results do not include customer names or
+email values.
+
+These are read-only validation checks, not full unit tests. A NULL `CreatedAt`
+count does not prove that the default constraint works on insert; testing that
+behavior would require a separately approved data-writing test. The server
+does not expose general query execution, data modification, or stored-procedure
+execution.
 
 ## Workspace agent team
 
@@ -90,13 +103,16 @@ orchestration. It can delegate to these specialist agents:
 - **SQL Designer** — plans schema, relationships, constraints, indexes, and DDL.
 - **SQL Developer** — writes SQL and runs supported `CREATE` statements only
   after the user approves the exact SQL with `CONFIRM CREATE`.
-- **SQL Tester** — reviews scripts, checks connectivity, and prepares test plans; it does not execute general queries or stored procedures.
+- **SQL Tester** — reviews scripts, checks connectivity, and runs fixed
+  read-only customer-table checks; it does not execute arbitrary queries or
+  stored procedures.
 - **SQL Reporter** — documents designs and results based on available evidence;
   it does not query live database contents.
 
-The agent definitions live in `.github/agents/`. The SQL Coordinator and specialists use the tools currently exposed by this project's MCP server;
-they do not bypass those tool limitations. The SQL Tester can check connectivity and prepare test plans, but cannot execute general queries or stored procedures.
-The SQL Reporter documents supplied or workspace evidence; it cannot query live database contents.
+The agent definitions live in `.github/agents/`. The SQL Coordinator and
+specialists use the tools currently exposed by this project's MCP server; they
+do not bypass those tool limitations. The SQL Reporter documents supplied or
+workspace evidence; it does not query live database contents.
 
 Each agent appends meaningful operations to its own
 `.github/agents/log_<Agent_Name>.txt` file, using underscores for spaces in the

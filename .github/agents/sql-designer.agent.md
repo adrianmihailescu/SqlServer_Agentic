@@ -33,7 +33,7 @@ Server data design.
 - Use the local date and this exact format; leave a blank line between entries:
 
   ```text
-  date 2026_11_05
+  date 2026_11_05 14:24:23
   operation Reviewed the requested table relationships
   ```
 
