@@ -42,7 +42,7 @@ appropriate specialists, and presenting one clear result to the user.
 ## Operation log
 
 - Append one entry for each meaningful operation performed by this agent,
-  including failed attempts, to `.github/agents/log_SQL_Coordinator.txt`.
+  including failed attempts, to `.github/agents/logs/log_SQL_Coordinator.txt`.
 - Use the local date and this exact format; leave a blank line between entries:
 
   ```text

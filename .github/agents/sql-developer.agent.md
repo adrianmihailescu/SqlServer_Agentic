@@ -56,7 +56,7 @@ For every database object creation task:
 ## Operation log
 
 - Append one entry for each meaningful implementation operation, including
-  failed attempts, to `.github/agents/log_SQL_Developer.txt`.
+  failed attempts, to `.github/agents/logs/log_SQL_Developer.txt`.
 - Use the local date and this exact format; leave a blank line between entries:
 
   ```text

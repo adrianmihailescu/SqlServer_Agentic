@@ -29,7 +29,7 @@ Server data design.
 ## Operation log
 
 - Append one entry for each meaningful design or review operation, including
-  failed attempts, to `.github/agents/log_SQL_Designer.txt`.
+  failed attempts, to `.github/agents/logs/log_SQL_Designer.txt`.
 - Use the local date and this exact format; leave a blank line between entries:
 
   ```text

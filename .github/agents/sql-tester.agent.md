@@ -37,7 +37,7 @@ validation plans without changing database state.
 ## Operation log
 
 - Append one entry for each meaningful review or validation operation,
-  including failed attempts, to `.github/agents/log_SQL_Tester.txt`.
+  including failed attempts, to `.github/agents/logs/log_SQL_Tester.txt`.
 - Use the local date and this exact format; leave a blank line between entries:
 
   ```text

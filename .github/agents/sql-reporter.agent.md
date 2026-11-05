@@ -27,7 +27,7 @@ workspace files and evidence supplied by the coordinator or other specialists.
 ## Operation log
 
 - Append one entry for each meaningful documentation or reporting operation,
-  including failed attempts, to `.github/agents/log_SQL_Reporter.txt`.
+  including failed attempts, to `.github/agents/logs/log_SQL_Reporter.txt`.
 - Use the local date and this exact format; leave a blank line between entries:
 
   ```text
