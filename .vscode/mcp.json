@@ -1,0 +1,13 @@
+{
+    "servers": {
+        "sqlserver": {
+            "type": "stdio",
+            "command": "node",
+            "args": [
+                "src/index.js"
+            ],
+            "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    }
+}
