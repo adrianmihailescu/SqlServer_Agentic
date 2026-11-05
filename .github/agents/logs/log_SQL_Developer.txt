@@ -1,2 +1,5 @@
 date 2026_11_05
 operation Created the user-approved dbo.NewCustomers table.
+
+date 2026_11_05
+operation Created the user-approved dbo.ChangedCustomers table.

@@ -145,6 +145,7 @@ If connection setup fails, check that:
 
 ## Project layout
 
-- `src/index.js` — MCP server, SQL connection configuration, and tool handlers.
+- `src/index.js` — MCP server startup and SQL connection configuration.
+- `src/tools.js` — MCP tool registration and SQL operation handlers.
 - `.vscode/mcp.json` — Visual Studio Code MCP server configuration.
 - `.github/agents/` — SQL Coordinator and specialist agent instructions.

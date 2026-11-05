@@ -30,3 +30,6 @@ operation Updated README to document the reduced schema test fields and omitted 
 
 date 2026_11_05
 operation Removed the duplicate-email test from the validation tool and updated the README.
+
+date 2026_11_05
+operation Extracted the three MCP tool registrations into src/tools.js and verified registration and syntax.
