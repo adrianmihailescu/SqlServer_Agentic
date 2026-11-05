@@ -1,8 +1,35 @@
 # SQL Server Agentic
 
 A Node.js Model Context Protocol (MCP) server that connects an MCP-compatible
-client, such as Visual Studio Code, to SQL Server. The workspace also includes
-a SQL Developer agent definition for working with the server.
+client, such as Visual Studio Code, to SQL Server. A workspace agent team
+coordinates SQL design, implementation, validation planning, and reporting.
+
+## Architecture
+
+```mermaid
+flowchart TB
+    C["SQL Coordinator Agent<br/>Understands requirements and delegates work"]
+    D["SQL Designer<br/>Plans tables, relationships, constraints, indexes, and DDL"]
+    V["SQL Developer<br/>Generates SQL and executes supported CREATE scripts after approval"]
+    T["SQL Tester<br/>Reviews scripts, checks connectivity, and prepares test plans"]
+    R["SQL Reporter<br/>Documents designs, scripts, results, and known limitations"]
+    M["SQL Server MCP Server<br/>Connection check and approved CREATE DDL"]
+    DB[("SQL Server<br/>Configured database and existing objects")]
+
+    C --> D
+    C --> V
+    C --> T
+    C --> R
+    C --> M
+    V --> M
+    T --> M
+    M --> DB
+```
+
+The coordinator routes work to specialist agents and consolidates their
+evidence-based results. Database access goes through the MCP server; only its
+connection check and explicitly approved `CREATE` statements are currently
+available.
 
 ## Requirements
 
@@ -60,6 +87,34 @@ This check is a convenience guard, not a replacement for appropriate SQL
 Server permissions. Use a database account with only the permissions the
 application needs.
 
+The current MCP server does not expose general query execution, data
+modification, or stored-procedure execution. The SQL Tester can review scripts
+and prepare test plans, but cannot run those tests against the database.
+
+## Workspace agent team
+
+Select **SQL Coordinator** in Visual Studio Code for tasks that need
+orchestration. It can delegate to these specialist agents:
+
+- **SQL Designer** — plans schema, relationships, constraints, indexes, and DDL.
+- **SQL Developer** — writes SQL and runs supported `CREATE` statements only
+  after the user approves the exact SQL with `CONFIRM CREATE`.
+- **SQL Tester** — reviews scripts, checks connectivity, and prepares test
+  plans; it does not execute general queries or stored procedures.
+- **SQL Reporter** — documents designs and results based on available evidence;
+  it does not query live database contents.
+
+The agent definitions live in `.github/agents/`. The SQL Coordinator and
+specialists use the tools currently exposed by this project's MCP server; they
+do not bypass those tool limitations. The SQL Tester can check connectivity and
+prepare test plans, but cannot execute general queries or stored procedures.
+The SQL Reporter documents supplied or workspace evidence; it cannot query live
+database contents.
+
+Automatic subagent delegation uses the VS Code **Local** agent harness. Other
+harnesses may let you select the agent profiles individually but may not support
+the coordinator's `agents` configuration.
+
 ## Connection and TLS notes
 
 The server uses the `mssql` package with its `msnodesqlv8` driver, Windows
@@ -84,4 +139,4 @@ If connection setup fails, check that:
 
 - `src/index.js` — MCP server, SQL connection configuration, and tool handlers.
 - `.vscode/mcp.json` — Visual Studio Code MCP server configuration.
-- `.github/agents/sql-developer.agent.md` — SQL Developer agent instructions.
+- `.github/agents/` — SQL Coordinator and specialist agent instructions.
