@@ -59,37 +59,28 @@ account running the MCP server must have the required SQL Server permissions.
    Set `SQL_SERVER` to your SQL Server host and, if applicable, named instance.
    Set `SQL_DATABASE` to an existing database. `.env` is excluded from Git.
 
-3. Ensure SQL Server accepts TCP/IP connections. For a named instance using a
-   dynamic port, SQL Server Browser may also need to be running and reachable.
-   Configure the firewall to allow the SQL Server listener and, when needed,
-   SQL Server Browser.
+3. Ensure SQL Server accepts TCP/IP connections. For a named instance using a dynamic port, SQL Server Browser may also need to be running and reachable.
+Configure the firewall to allow the SQL Server listener and, when needed, SQL Server Browser.
 
 4. Open the repository as a workspace in Visual Studio Code. The
    `.vscode/mcp.json` configuration starts `src/index.js` as the `sqlserver`
-   MCP server and loads settings from `.env`. Start or restart the MCP server
-   after changing its configuration.
+   MCP server and loads settings from `.env`. Start or restart the MCP servervafter changing its configuration.
 
 ## Available MCP tools
 
 ### `test_connection`
 
-Connects to the configured database and reports its current database and server
-names. It does not modify the database.
+Connects to the configured database and reports its current database and server names. It does not modify the database.
 
 ### `execute_ddl`
 
-Executes a `CREATE` statement for a supported SQL Server object: table, view,
-procedure, function, index, or schema. The caller must provide the exact
-approval phrase `CONFIRM CREATE`.
+Executes a `CREATE` statement for a supported SQL Server object: table, view, procedure, function, index, or schema. The caller must provide the exact approval phrase `CONFIRM CREATE`.
 
 The tool checks that the statement starts with a supported `CREATE` keyword.
-This check is a convenience guard, not a replacement for appropriate SQL
-Server permissions. Use a database account with only the permissions the
-application needs.
+This check is a convenience guard, not a replacement for appropriate SQL Server permissions. Use a database account with only the permissions the application needs.
 
 The current MCP server does not expose general query execution, data
-modification, or stored-procedure execution. The SQL Tester can review scripts
-and prepare test plans, but cannot run those tests against the database.
+modification, or stored-procedure execution. The SQL Tester can review scripts and prepare test plans, but cannot run those tests against the database.
 
 ## Workspace agent team
 
@@ -99,17 +90,13 @@ orchestration. It can delegate to these specialist agents:
 - **SQL Designer** — plans schema, relationships, constraints, indexes, and DDL.
 - **SQL Developer** — writes SQL and runs supported `CREATE` statements only
   after the user approves the exact SQL with `CONFIRM CREATE`.
-- **SQL Tester** — reviews scripts, checks connectivity, and prepares test
-  plans; it does not execute general queries or stored procedures.
+- **SQL Tester** — reviews scripts, checks connectivity, and prepares test plans; it does not execute general queries or stored procedures.
 - **SQL Reporter** — documents designs and results based on available evidence;
   it does not query live database contents.
 
-The agent definitions live in `.github/agents/`. The SQL Coordinator and
-specialists use the tools currently exposed by this project's MCP server; they
-do not bypass those tool limitations. The SQL Tester can check connectivity and
-prepare test plans, but cannot execute general queries or stored procedures.
-The SQL Reporter documents supplied or workspace evidence; it cannot query live
-database contents.
+The agent definitions live in `.github/agents/`. The SQL Coordinator and specialists use the tools currently exposed by this project's MCP server;
+they do not bypass those tool limitations. The SQL Tester can check connectivity and prepare test plans, but cannot execute general queries or stored procedures.
+The SQL Reporter documents supplied or workspace evidence; it cannot query live database contents.
 
 Each agent appends meaningful operations to its own
 `.github/agents/log_<Agent_Name>.txt` file, using underscores for spaces in the
