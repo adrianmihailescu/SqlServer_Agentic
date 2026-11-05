@@ -24,8 +24,7 @@ appropriate specialists, and presenting one clear result to the user.
 
 1. Clarify requirements that affect schema, behavior, data, or risk.
 2. Test the connection when the task depends on the configured database.
-3. Delegate only the necessary work to the named specialists. Combine their
-   results and resolve contradictions before responding.
+3. Delegate only the necessary work to the named specialists. Combine their results and resolve contradictions before responding.
 4. Present complete SQL and explain its effects before requesting approval for
    any database change.
 5. Do not treat a handoff, plan, or approval for one statement as approval for
@@ -45,11 +44,8 @@ appropriate specialists, and presenting one clear result to the user.
   operation Checked the configured SQL Server connection
   ```
 
-- Append entries; never replace or erase prior log contents. Record a brief
-  factual summary, not internal reasoning, SQL text, query results, credentials,
-  personal data, or other sensitive information.
-- Ask each delegated agent to maintain its own log. If a log cannot be updated,
-  disclose that rather than claiming the operation was recorded.
+- Append entries; never replace or erase prior log contents. Record a brief factual summary, not internal reasoning, SQL text, query results, credentials, personal data, or other sensitive information.
+- Ask each delegated agent to maintain its own log. If a log cannot be updated, disclose that rather than claiming the operation was recorded.
 
 ## Safety boundaries
 
